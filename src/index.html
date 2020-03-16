@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>待办事项列表</title>
+  <link href="https://cdn.bootcss.com/bulma/0.8.0/css/bulma.min.css" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <section class="hero is-dark">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+            待办事项列表
+          </h1>
+          <h2 class="subtitle">
+            今天的事情今天做，明天才有时间做更多的事情
+          </h2>
+          <h2 class="subtitle" id="subtitle2"></h2>
+        </div>
+      </div>
+    </section>
+    <div class="container is-widescreen" style="margin: 30px auto;">
+      <div class="columns">
+        <div class="column is-one-quarter">
+          <input type="text" placeholder="输入代办事项名称" class="input" id="input-add" style="margin-bottom: 0.2rem;">
+          <input type="text" placeholder="输入所需时间" class="input" id="input-time">
+        </div>
+        <div class="column is-one-quarter" style="margin-top: 1.5rem;">
+          <button class="button is-primary" id="btn-add">添加</button>
+        </div>
+      </div>
+    </div>
+    <div class="container is-widescreen" id="todos-wrap">
+      <nav class="panel">
+        <p class="panel-heading">
+          已完成
+        </p>
+        <div id="has-finish-wrap" class="panel-block columns is-multiline"></div>
+      </nav>
+      <nav class="panel">
+        <p class="panel-heading">
+          未完成
+        </p>
+        <div id="un-finish-wrap" class="panel-block columns is-multiline"></div>
+      </nav>
+    </div>
+  </div>
+</body>
+</html>
