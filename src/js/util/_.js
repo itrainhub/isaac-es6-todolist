@@ -13,3 +13,15 @@ export const cloneDeep = obj => {
   
   return obj
 }
+
+// 判断是否为空
+// ''/undefined/null/{}/[]
+export const isEmpty = param => {
+  return (
+    typeof param === 'undefined'
+    || param === null
+    || param === ''
+    || Array.isArray(param) && param.length === 0
+    || isObject(param) && Object.getOwnPropertyNames(param).length === 0
+  )
+}

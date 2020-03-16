@@ -1,39 +1,45 @@
-import TodoHeader from './components/TodoHeader'
-import TodoInput from './components/TodoInput'
-import TodoList from './components/TodoList'
+import TodoHeader from '@/components/TodoHeader'
+import TodoInput from '@/components/TodoInput'
+import TodoList from '@/components/TodoList'
+import Component from '@/base/component'
+import { mount } from './util'
 
-export default class App {
-  constructor(store) {
-    this.store = store
-    this.init()
+export default class App extends Component {
+  constructor(props) {
+    super(props)
+    this.registerComponent()
   }
 
-  init() {
+  /**
+   * 注册组件
+   */
+  registerComponent() {
+    const { store } = this.props
     this.todoHeader = new TodoHeader({
       subtitle: '去日不可追，来日犹可期！'
     })
-    this.todoInput = new TodoInput(this.store)
-    this.todoList = new TodoList(this.store)
+    this.todoInput = new TodoInput({ store })
+    this.todoList = new TodoList({ store })
   }
 
-  createDom() {
-    const todoHeader = this.todoHeader.render()
-    const todoInput = this.todoInput.render()
-    const todoList = this.todoList.render()
-    return {
-      todoHeader,
-      todoInput,
-      todoList
-    }
+  /**
+   * 重写 renderDOM() 方法
+   */
+  renderDOM() {
+    super.renderDOM()
+    mount(this.todoHeader, this.el.querySelector('.todo-header'))
+    mount(this.todoInput, this.el.querySelector('.todo-input'))
+    mount(this.todoList, this.el.querySelector('.todo-list'))
+
+    return this.el
   }
 
   render() {
-    const { todoHeader, todoInput, todoList } = this.createDom()
     return `
       <div class="container">
-        <div>${todoHeader}</div>
-        <div class="box" style="margin: 12px 0">${todoInput}</div>
-        <div>${todoList}</div>
+        <div class="todo-header"></div>
+        <div class="box todo-input" style="margin: 12px 0"></div>
+        <div class="todo-list"></div>
       </div>
     `
   }

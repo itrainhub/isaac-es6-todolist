@@ -1,6 +1,11 @@
 import { cloneDeep } from '../util'
 import { ActionTypes } from './action'
 
+/**
+ * reducer
+ * @param {*} state 
+ * @param {*} action 
+ */
 export const reducer = (state, action) => {
   if (!state)
     return []

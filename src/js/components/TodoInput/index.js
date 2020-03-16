@@ -1,41 +1,43 @@
+import Component from "@/base/component"
 import { ActionTypes } from "@/store/action"
 
 let uid = 1
-export default class TodoInput {
-  constructor(store) {
-    this.store = store
-    this.addListener()
-  }
 
-  addListener = () => {
-    document.addEventListener('keydown', e => {
-      const target = e.target
-      if (target.classList.contains('input-todo') && e.keyCode === 13) {
-        this.addTodoItem()
-      }
-    }, false)
-    document.addEventListener('click', e => {
-      const target = e.target
-      if (target.classList.contains('btn-add-todo')) {
-        this.addTodoItem()
-      }
-    })
-  }
-
+export default class TodoInput extends Component {
+  // 添加待办事项
   addTodoItem() {
-    const field = document.querySelector('.input-todo')
+    const field = this.el.querySelector('.input-todo')
     const title = field.value
     const todoItem = {
       id: uid++,
       title,
       isCompleted: false
     }
-    this.store.dispatch({
+    this.props.store.dispatch({
       type: ActionTypes.ADD_TODO_ITEM,
       payload: todoItem
     })
+    field.value = ''
+    field.focus()
   }
 
+  // 点击按钮添加
+  onClick(e) {
+    const target = e.target
+    if (target.classList.contains('btn-add-todo')) {
+      this.addTodoItem()
+    }
+  }
+
+  // 输入框回车添加
+  onKeyDown(e) {
+    const target = e.target
+    if (target.classList.contains('input-todo') && e.keyCode === 13) {
+      this.addTodoItem()
+    }
+  }
+
+  // 渲染
   render() {
     return (`
       <div class="field has-addons">
