@@ -14,12 +14,11 @@ export default class App extends Component {
    * 注册组件
    */
   registerComponent() {
-    const { store } = this.props
     this.todoHeader = new TodoHeader({
       subtitle: '去日不可追，来日犹可期！'
     })
-    this.todoInput = new TodoInput({ store })
-    this.todoList = new TodoList({ store })
+    this.todoInput = new TodoInput()
+    this.todoList = new TodoList()
   }
 
   /**

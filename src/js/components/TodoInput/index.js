@@ -1,5 +1,6 @@
 import Component from "@/base/component"
 import { ActionTypes } from "@/store/action"
+import { context } from '@/util'
 
 let uid = 1
 
@@ -13,7 +14,7 @@ export default class TodoInput extends Component {
       title,
       isCompleted: false
     }
-    this.props.store.dispatch({
+    context.store.dispatch({
       type: ActionTypes.ADD_TODO_ITEM,
       payload: todoItem
     })

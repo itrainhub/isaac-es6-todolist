@@ -1,7 +1,7 @@
 import TodoItem from './TodoItem'
 import { ActionTypes } from '@/store/action'
 import Component from '@/base/component'
-import { mount, createDOM } from '@/util'
+import { mount, context } from '@/util'
 
 export default class TodoList extends Component {
   // 栏目信息
@@ -16,7 +16,7 @@ export default class TodoList extends Component {
   ]
   constructor(props) {
     super(props)
-    this.store = props.store
+    this.store = context.store
 
     // 仓库数据更新后，自动刷新
     // 先删除已渲染的todo-list
