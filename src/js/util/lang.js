@@ -13,10 +13,6 @@ export const createDOM = html => {
 // 挂载并渲染元素
 export const mount = (component, container) => {
   container.appendChild(component.renderDOM())
-  component.onStateChange = (newEl, oldEl) => {
-    container.insertBefore(newEl, oldEl)
-    container.removeChild(oldEl)
-  }
 }
 
 // 上下文

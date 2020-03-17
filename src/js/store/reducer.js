@@ -23,6 +23,11 @@ export const reducer = (state, action) => {
       })
     case ActionTypes.DELETE_TODO_ITEM:
       return newState.filter(todoItem => todoItem.id !== action.payload.id)
+    case ActionTypes.EDIT_TODO_ITEM:
+      const { id } = action.payload
+      return newState.map(item => {
+        return item.id === id ? action.payload : item
+      })
     default:
       return state
   }
