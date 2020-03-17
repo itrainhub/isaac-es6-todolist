@@ -31,6 +31,9 @@ class TodoInput extends Component {
     }
   }
 
+  /**
+   * 重写 renderDOM() 方法，每次渲染时默认让输入框获得焦点
+   */
   renderDOM() {
     this.el = super.renderDOM()
     setTimeout(() => {
@@ -39,7 +42,9 @@ class TodoInput extends Component {
     return this.el
   }
 
-  // 渲染
+  /**
+   * 生成渲染html文本
+   */
   render() {
     return (`
       <div class="field has-addons">

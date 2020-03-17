@@ -37,8 +37,9 @@ class TodoItem extends Component {
       updateTodoItemAction(id)
     } else if (classNames.contains('btn-delete-todo-item')) { // 删除
       deleteTodoItemAction(id)
-    } else if (classNames.contains('txt-todo-item')) { // 点击事项文本，编辑
+    } else if (classNames.contains('txt-todo-item')) { // 点击事项文本，编辑，显示对应操作按钮
       this.edit()
+      // 编辑文本框获得焦点
       setTimeout(() => this.el.querySelector('.input-edit-todo-item').select(), 0)
     } else if (classNames.contains('btn-save-todo-item')) { // 保存编辑待办事项
       const title = this.el.querySelector('.input-edit-todo-item').value
@@ -61,6 +62,7 @@ class TodoItem extends Component {
     const target = e.target
     if (target.classList.contains('input-edit-todo-item')) {
       const title = target.value
+      // 内容未改变，则说明未修改事项，文本框失去焦点，还原显示
       if (title === this.props.title) {
         this.cancel()
       }
