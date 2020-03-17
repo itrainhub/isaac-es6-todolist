@@ -1,22 +1,3 @@
-// 创建 store，状态管理
-export const createStore = reducer => {
-  let state = null
-  const listeners = []
-  const getState = () => state
-  const subscribe = (...listener) => listeners.push(...listener)
-  const dispatch = action => {
-    state = reducer(state, action)
-    listeners.forEach(l => l())
-  }
-  dispatch({})
-
-  return {
-    getState,
-    subscribe,
-    dispatch
-  }
-}
-
 // 由html生成DOM节点
 export const createDOM = html => {
   if (typeof Range !== 'undefined' && Range.prototype.createContextualFragment)
@@ -35,5 +16,18 @@ export const mount = (component, container) => {
   component.onStateChange = (newEl, oldEl) => {
     container.insertBefore(newEl, oldEl)
     container.removeChild(oldEl)
+  }
+}
+
+// 上下文
+export const context = {
+  set(key, value) {
+    this[key] = value
+  },
+  get(key) {
+    return this[key]
+  },
+  remove(key) {
+    delete this[key]
   }
 }

@@ -25,3 +25,6 @@ export const isEmpty = param => {
     || isObject(param) && Object.getOwnPropertyNames(param).length === 0
   )
 }
+
+// 空函数
+export const noop = () => {}
