@@ -1,79 +1,44 @@
 import TodoItem from './TodoItem'
-import { ActionTypes } from '@/store/action'
 import Component from '@/base/component'
-import { mount, context } from '@/util'
+import { mount } from '@/util'
+import { connect } from '@/store'
 
-export default class TodoList extends Component {
-  // 栏目信息
+const mapStateToProps = state => ({todoList: state})
+@connect(mapStateToProps)
+class TodoList extends Component {
+  // 栏目信息（完成、未完成待办事项）
   sections = [
     {
       title: '未完成',
-      className: 'list-uncompleted'
+      className: 'list-uncompleted',
+      isCompleted: false
     }, {
       title: '已完成',
-      className: 'list-completed'
+      className: 'list-completed',
+      isCompleted: true
     }
   ]
-  constructor(props) {
-    super(props)
-    this.store = context.store
-
-    // 仓库数据更新后，自动刷新
-    // 先删除已渲染的todo-list
-    // 再重新渲染todo-list
-    this.store.subscribe(() => {
-      this.el.querySelector('.list-uncompleted').innerHTML = ''
-      this.el.querySelector('.list-completed').innerHTML = ''
-    },this._renderCompleted.bind(this), this._renderUncompleted.bind(this))
-  }
-
-  // 修改、删除
-  onClick(e) {
-    const target = e.target
-    if (target.classList.contains('btn-update-todo-item')) { // 修改状态
-      this.store.dispatch({
-        type: ActionTypes.UPDATE_TODO_ITEM,
-        payload: {
-          id: Number(target.dataset.id)
-        }
-      })
-    } else if (target.classList.contains('btn-delete-todo-item')) { // 删除
-      this.store.dispatch({
-        type: ActionTypes.DELETE_TODO_ITEM,
-        payload: {
-          id: Number(target.dataset.id)
-        }
-      })
-    }
-  }
 
   /**
    * 渲染列表项
    * @param {*} todoList
    */
-  _renderTodoItem(todoList, selector) {
-    if (todoList.length === 0)
-      mount(new TodoItem({}), this.el.querySelector(selector))
-
-    todoList.forEach(item => {
-      mount(new TodoItem(item), this.el.querySelector(selector))
+  _renderTodoItem() {
+    const { todoList } = this.props
+    this.sections.forEach(section => {
+      const { isCompleted, className } = section
+      // 列表项父元素节点（完成/未完成）
+      const wrapper = this.el.querySelector('.' + className)
+      // 筛选完成/未完成待办事项
+      const list = todoList.filter(todoItem => todoItem.isCompleted === isCompleted)
+      if (list.length === 0) return
+      // 清空父元素节点
+      wrapper.innerHTML = ''
+      // 循环渲染挂载待办事项
+      list.forEach(item => {
+        mount(new TodoItem(item), wrapper)
+      })
     })
-  }
-
-  /**
-   * 已完成
-   */
-  _renderCompleted() {
-    const todoList = this.store.getState().filter(todoItem => todoItem.isCompleted)
-    this._renderTodoItem(todoList, '.list-completed')
-  }
-
-  /**
-   * 未完成
-   */
-  _renderUncompleted() {
-    const todoList = this.store.getState().filter(todoItem => !todoItem.isCompleted)
-    this._renderTodoItem(todoList, '.list-uncompleted')
   }
 
   /**
@@ -81,8 +46,7 @@ export default class TodoList extends Component {
    */
   renderDOM() {
     this.el = super.renderDOM()
-    this._renderUncompleted()
-    this._renderCompleted()
+    this._renderTodoItem()
 
     return this.el
   }
@@ -95,7 +59,9 @@ export default class TodoList extends Component {
             <div class="column">
               <div class="panel">
                 <p class="panel-heading">${section.title}</p>
-                <ul class="${section.className}"></ul>
+                <ul class="${section.className}">
+                  <li class="panel-block content">暂无</li>
+                </ul>
               </div>
             </div>
           `)).join('')
@@ -104,3 +70,5 @@ export default class TodoList extends Component {
     `)
   }
 }
+
+export default TodoList
