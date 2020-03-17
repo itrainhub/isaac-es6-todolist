@@ -2,13 +2,13 @@
 
 ## 概述
 
-随着前端技术 的发展，2015年6月17日，`ECMA` 国际组织发布了 `ECMAScript` 的第六版，该版本正式名称为 `ECMAScript 2015`。自此，`ECMAScript` 每年都会发布一次新标准，目前 [ECMAScript 2020](https://tc39.es/ecma262/) 草案已经出炉。`ECMAScript 2015` 通常被称为 `ECMAScript 6` 或者简称 `ES6`，实际上现在很多时候我们也将 `ECMAScript 2015` 之后的版本都统称为 `ES6`。
+随着前端技术的发展，2015年6月17日，`ECMA` 国际组织发布了 `ECMAScript` 的第六版，该版本正式名称为 `ECMAScript 2015`。自此，`ECMAScript` 每年都会发布一次新标准，目前 [ECMAScript 2020](https://tc39.es/ecma262/) 草案已经出炉。`ECMAScript 2015` 通常被称为 `ECMAScript 6` 或者简称 `ES6`，实际上现在很多时候我们也将 `ECMAScript 2015` 之后的版本都统称为 `ES6`。
 
 本文主要是结合 `ES6` 来实现一个 `TodoList` 示例，不曾想将“简单的问题复杂化”了，那就顺便利用原生的方式封装一下，再顺便把 `React` 相关的基本原理简单实现一下。当然，虚拟 `DOM` 暂不在讨论之列。
 
 ## TodoList
 
-本案例结合模块化与组件化思维来实现，利用 `webpack` 打包，可以按以下步骤运动示例项目：
+本案例结合模块化与组件化思维来实现，利用 `webpack` 打包，可以按以下步骤运行示例项目：
 
 ```bash
 # 克隆仓库
@@ -24,7 +24,7 @@ $ npm start
 
 ### 组件基类 Component
 
-为增强组件的能用性，抽取出 `Component` 基类，以后自定义的组件继续 `Component` 即可：
+为增强组件的通用性，抽取出 `Component` 基类，以后自定义的组件继承 `Component` 即可：
 
 ```js
 class Component {
@@ -80,7 +80,7 @@ class Component {
 
 `setState()` 方法是修改组件内部状态使用到的方法，因为修改组件内部状态后通常会涉及到视图更新，如果直接调用状态属性修改，则不会触发视图响应式更新。
 
-`renderDOM()` 方法是生成 `DOM` 节点，为组件视图中的 `DOM` 元素绑定事件。方法中调用到组件对象的 `render()` 方法，该方法需要在子类中实现，通过 `render()` 方法来返回视图的 `html` 字符串文本。组件中的事件处理比较粗糙，遍历组件对象是中否有 `on` 开头的方法，有则注册事件监听，通过事件委派的方式来处理事件。
+`renderDOM()` 方法是生成 `DOM` 节点，为组件视图中的 `DOM` 元素绑定事件。方法中调用到组件对象的 `render()` 方法（该方法需要在子类中实现），通过 `render()` 方法来返回视图的 `html` 字符串文本。组件中的事件处理比较粗糙，遍历组件对象是中否有 `on` 开头的方法，有则注册事件监听，通过事件委派的方式来处理事件。
 
 ### 组件子类
 
@@ -169,9 +169,9 @@ class TodoInput extends Component {
 }
 ```
 
-类中的 `onClick()` 和 `onKeyDown()` 方法为事件处理方法，当点击添加按钮和在文本框中按回车键时能够触发添加待办事项 `addTodoItem()` 的方法调用。
+类中的 `onClick()` 和 `onKeyDown()` 方法为事件处理方法，当点击添加按钮和在文本框中按回车键时，能够触发添加待办事项 `addTodoItem()` 方法的调用。
 
-重写 `renderDOM()` 方法是为是让视图在渲染时能够默认使添加待办事项的文本框获得焦点，而不用每次点击鼠标来切换。
+重写 `renderDOM()` 方法是为了让视图在渲染时能够默认使添加待办事项的文本框获得焦点，而不用每次点击鼠标来切换。
 
 #### TodoItem
 
@@ -382,7 +382,7 @@ class TodoList extends Component {
 }
 ```
 
-待办事项列表分两栏显示：未完成和已完成，重写 `renderDOM()` 方法，先生成 `TodoList` 组件视图的节点，再查找对应元素添加渲染列表项 `TodoItem` 组件视图。
+待办事项列表分两栏显示：未完成和已完成，重写 `renderDOM()` 方法，先生成 `TodoList` 组件的节点，再查找对应元素添加渲染列表项 `TodoItem` 节点。
 
 #### App
 
@@ -432,7 +432,7 @@ class App extends Component {
 
 先注册各组件，创建对应对象实例，再重写 `renderDOM()` 方法，将各组件对象中的 `DOM` 元素节点挂载到对应的父节点下。
 
-### 测试效果
+### 挂载页面
 
 ```js
 // 页面html元素为：<div id="root"></div>
@@ -442,11 +442,13 @@ mount(
 )
 ```
 
+将整合后的组件节点挂载到静态页面渲染显示。
+
 ## 状态管理
 
-整个 `TodoList` 各组件间可能会涉及数据共享，如在 `TodoInput` 组件中添加的待办事项需要在 `TodoList` 组件中使用并渲染，在 `TodoItem` 组件中修改的待办事项需要在 `TodoList` 组件中重新渲染，那如何来实现不同组件间的通信呢。一种办法是通过 `props` 属性来传递，本例比较简单，完全可以使用属性传递的方式来处理。可参考[https://github.com/itrainhub/isaac-es6-todolist/tree/7f8da25d4ccd9e0ac48e889a352ca4f23546a4b9](https://github.com/itrainhub/isaac-es6-todolist/tree/7f8da25d4ccd9e0ac48e889a352ca4f23546a4b9) 版本来实现。
+整个 `TodoList` 各组件间可能会涉及数据共享，如在 `TodoInput` 组件中添加的待办事项需要在 `TodoList` 组件中使用并渲染，在 `TodoItem` 组件中修改的待办事项需要在 `TodoList` 组件中重新渲染，那如何来实现不同组件间的通信呢。一种办法是通过 `props` 属性来传递，本例比较简单，完全可以使用属性传递的方式来处理。可参考[https://github.com/itrainhub/isaac-es6-todolist/tree/876ded3552a01973c225f567b62acdd106f22a99](https://github.com/itrainhub/isaac-es6-todolist/tree/876ded3552a01973c225f567b62acdd106f22a99) 版本来实现。
 
-除了通过 `props` 传递方式处理外，本示例继续优化了状态管理，借用 `redux` 和 `react-redux` 的原理来实现组件间通信，代码解析如下。
+除了通过 `props` 传递方式处理外，本示例继续优化了状态管理，借用 `Redux` 和 `react-redux` 的原理来实现组件间通信，代码解析如下。
 
 ### createStore
 
@@ -478,7 +480,7 @@ const createStore = reducer => {
 
 单一数据源是指应用的 `state` 被存储在一棵 `object tree` 中，并且这棵 `object tree` 只存在于唯一一个 `store` 中，所以定义 `createStore()` 方法来统一管理。
 
-`State` 只读是指对 `state` 的修改应该集中管理，唯一修改 `state` 的方法就是触发 `action`。为避免 `state` 被任意修改，此处使用闭包，在 createStore 函数内部定义局部变量 `state` 来保存所有状态集，由于作用域链的关系，`state` 在函数体外部并不能直接调用到。函数体内部提供 `getState()` 方法来获取 `state` 状态数据，提供 `dispatch()` 方法来修改状态数据。`dispatch` 传递一个 `action` 作为参数，`action` 是一个用于描述已发生事件的普通对象，通常 `action` 对象有 `type` 属性表示修改状态的操作类型，payload 表示有效载荷（即与修改状态相关的数据），如：
+`State` 只读是指对 `state` 的修改应该集中管理，唯一修改 `state` 的方法就是触发 `action`。为避免 `state` 被任意修改，此处使用闭包，在 `createStore` 函数内部定义局部变量 `state` 来保存所有状态集，由于作用域链的关系，`state` 在函数体外部并不能直接调用到。函数体内部提供 `getState()` 方法来获取 `state` 状态数据，提供 `dispatch()` 方法来修改状态数据。`dispatch` 传递一个 `action` 作为参数，`action` 是一个用于描述已发生事件的普通对象，通常 `action` 对象有`type` 和 `payload` 两个属性， `type` 属性表示修改状态的操作类型，`payload` 表示有效载荷（即与修改状态相关的数据），如：
 
 ```js
 {
@@ -491,7 +493,9 @@ const createStore = reducer => {
 }
 ```
 
-使用纯函数来执行修改。所谓纯函数，就是指返回值只依赖于它的参数，并且在执行过程中没有副作用的函数。`reducer` 就是一个纯函数，它用来描述状态会如何变化。`reducer()` 会接受 `state` 与 `action` 两个参数，`state` 表示原始状态集，`action` 携带修改的操作类型与有效载荷。在 `reducer()` 函数体内会根据 `action.type` 执行状态更新，更新完毕后返回新的 `state`。之所以要返回新的 `state` 是由于 `Redux` 需要不变性（immutability），在实际应用中，与那些可被随意篡改的数据相比，永远不变的数据更容易追踪，推导，可以让复杂的变化检测机制简单化。如果直接修改 `state` 中的状态数据，那么要跟踪变化就会变得困难了。本案例中使用对象深克隆的方式来修改状态数据，当然还有更好的方式如 [immutable.js](https://github.com/immutable-js/immutable-js)、[immer](https://github.com/immerjs/immer) 等库都可以实现 `immutable` ，这又是另一个专题的讨论了。
+使用纯函数来执行修改。所谓纯函数，就是指返回值只依赖于它的参数，并且在执行过程中没有副作用的函数。`reducer()` 就是一个纯函数，它用来描述状态会如何变化。`reducer()` 会接收 `state` 与 `action` 两个参数，`state` 表示原始状态集，`action` 携带修改的操作类型与有效载荷。在 `reducer()` 函数体内会根据 `action.type` 执行状态更新，更新完毕后返回新的 `state`。
+
+之所以 `reducer()` 要返回新的 `state` 是由于 `Redux` 需要不变性（immutability），在实际应用中，与那些可被随意篡改的数据相比，永远不变的数据更容易追踪，推导，可以让复杂的变化检测机制简单化。如果直接修改 `state` 中的状态数据，那么要跟踪变化就会变得困难了。本案例中使用对象深克隆的方式来修改状态数据，当然还有更好的方式如 [immutable.js](https://github.com/immutable-js/immutable-js)、[immer](https://github.com/immerjs/immer) 等库都可以实现不变性，这又是另一个专题的讨论了。
 
 在 `createStore()` 中还利用观察者模式，来监听状态更新后的操作：
 
@@ -510,9 +514,9 @@ const dispatch = action => {
 
 `store` 是集中状态管理的仓库，可以将 `TodoList` 中的列表数据保存到 `store` 中，但要在组件间传递又如何处理呢，如果通过 `props` 来传递，那如果有跨层级的传递操作还是比较麻烦。在此利用全局 `context` 的方式来处理，创建 `store` 后将其存放到 `context` 中，在需要使用状态数据的组件中从 `context` 中获取即可。
 
-在 `TodoList` 中会添加、修改、删除待办事项，这就涉及到状态的更新。在 `store` 中要实现状态更新，需要手动调用 `dispatch()` 方法，如果在状态更新时能够自动调用 `dispatch()` 来修改数据，并且状态更新后视图也能响应式更新就更好了。
+在 `TodoList` 中会添加、修改、删除待办事项，这就涉及到状态的更新。在 `store` 中要实现状态更新，需要手动调用 `dispatch()` 方法，如果在状态更新时能够自动调用 `dispatch()` 来修改数据，并且状态更新后视图也能响应式更新就更方便了。
 
-基于这些更方便的原因，定义连接函数 `connect()` 如下：
+基于这些“更方便”的原因，定义连接函数 `connect()` 如下：
 
 ```js
 const connect = (mapStateToProps, mapDispatchToProps) => WrappedComponent => {
@@ -578,7 +582,9 @@ const connect = (mapStateToProps, mapDispatchToProps) => WrappedComponent => {
 
 这里有一个高阶组件的概念，所谓高阶组件，其实就是一个函数，传递一个组件作为参数，然后返回一个新的组件。这利用的是设计模式中的装饰者模式来实现的，为已有的被包装对象添加额外的功能，而又不改变被包装对象的结构。
 
-`connect()` 函数接收两个参数，`mapStateToProps` 和 `mapDispatchToProps`，可以将 `store` 中的 `state` 和更新状态的方法（也可以叫 `actionCreator` ）映射为被包装组件的 `props` 以供组件对象直接使用。`connect()` 函数的返回值就是一个高阶组件，将需要被包装的组件作为参数传递到高阶组件内部，然后在高阶组件内部处理后返回新的装饰组件。
+`connect()` 函数的返回值就是一个高阶组件，将需要被包装的组件作为参数传递到高阶组件内部，然后在高阶组件内部处理后返回新的装饰组件。
+
+`connect()` 函数接收两个参数，`mapStateToProps` 和 `mapDispatchToProps`，可以将 `store` 中的 `state` 和更新状态的方法（也可以叫 `actionCreator` ）映射为被包装组件的 `props` 以供被包装的组件对象直接使用。
 
 `Connect` 类就是一个装饰类，继承自 `Component`，也是一个组件类。在 `_updateProps()` 方法中，将 `mapStateToProps` 和 `mapDispatchToProps` 返回对象中的属性与 `Connect` 接收到的 `props` 属性全部合并，调用 `setState()` 方法设置合并后的所有 `props`，然后在重写的 `renderDOM()` 方法中传递给被装饰对象 `new WrappedComponent(this.state.allProps)` 作为 `props` 使用。
 
@@ -647,14 +653,15 @@ const editTodoItemAction = todoItem => dispatch => {
 }
 ```
 
-定义好 `action` 后，只要在需要更新状态的组件中结合 `connect()` 函数调用，就可以直接在被装饰的组件中从 `props` 中调用到这些方法来更新状态并自动更新视图了。
+定义好 `action` 后，只要在需要更新状态的组件中结合 `connect()` 函数调用，就可以在被装饰的组件中从 `props` 中调用到这些方法来更新状态并自动更新视图了。
 
 ### reducer
 
 `dispatch(action)` 会调用到 `reducer` 来实现状态更新，`reducer()` 是一个纯函数，定义如下：
 
 ```js
-const reducer = (state = [], action) => {
+const reducer = (state, action) => {
+  if (!state) return []
   const newState = cloneDeep(state)
   switch(action.type) {
     case ActionTypes.ADD_TODO_ITEM:
@@ -680,7 +687,7 @@ const reducer = (state = [], action) => {
 }
 ```
 
-`reducer()` 中如果 `state` 不存在，则初始化为数组，用于保存所有的 `TodoList` 待办事项，接着克隆原始 `state`，然后判断 `action.type` 具体是哪种修改动作，根据不同的动作完成状态修改并返回修改后的新状态值。
+`reducer()` 中如果 `state` 不存在，则初始化为数组，用于保存所有的 `TodoList` 待办事项，接着克隆原始 `state`，然后判断 `action.type` 具体是哪种修改动作，根据不同的动作完成状态修改，并返回修改后的新状态值。
 
 ## 仓库创建及状态更新
 
@@ -718,10 +725,11 @@ class TodoInput extends Component {
 }
 ```
 
-将 `action` 中的 `addTodoItemAction` 与 TodoInput 组件 `connect` 连接起来，当实现添加待办事项功能时，调用 `this.props.addTodoItemAction(title)` 即可。
+将 `action` 中的 `addTodoItemAction()` 与 `TodoInput` 组件 `connect` 连接起来，当实现添加待办事项功能时，调用 `this.props.addTodoItemAction(title)` 即可。
 
 ## 测试效果
 
 最终完成效果如下图所示：
 
 ![效果](./_img/result.gif)
+
