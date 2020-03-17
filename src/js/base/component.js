@@ -1,4 +1,4 @@
-import { createDOM } from "@/util/lang"
+import { createDOM } from "@/util"
 
 /**
  * 基类

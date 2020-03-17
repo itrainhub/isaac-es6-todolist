@@ -1,5 +1,5 @@
 import Component from "@/base/component"
-import { connect } from "@/store/connect"
+import { connect } from "@/redux"
 import { addTodoItemAction } from "@/store"
 
 const mapDispatchToProps = {

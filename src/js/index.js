@@ -1,5 +1,6 @@
 import App from './App'
-import { createStore, reducer } from './store'
+import { reducer } from './store'
+import { createStore } from './redux'
 import { mount, context } from './util'
 // 状态仓库
 const store = createStore(reducer)

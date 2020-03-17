@@ -1,7 +1,7 @@
 import TodoItem from './TodoItem'
 import Component from '@/base/component'
 import { mount } from '@/util'
-import { connect } from '@/store'
+import { connect } from '@/redux'
 
 const mapStateToProps = state => ({todoList: state})
 @connect(mapStateToProps)

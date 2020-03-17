@@ -1,5 +1,6 @@
 import Component from "@/base/component"
-import { connect, updateTodoItemAction, deleteTodoItemAction, editTodoItemAction } from '@/store'
+import { connect } from '@/redux'
+import { updateTodoItemAction, deleteTodoItemAction, editTodoItemAction } from '@/store'
 
 const mapDispatchToProps = {
   updateTodoItemAction,

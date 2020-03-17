@@ -6,7 +6,6 @@ export const createStore = reducer => {
   const subscribe = (...listener) => listeners.push(...listener)
   const dispatch = action => {
     state = reducer(state, action)
-    console.log(state)
     listeners.forEach(l => l())
   }
   dispatch({})
