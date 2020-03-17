@@ -1,3 +1,5 @@
+import { escapeHTML } from "@/util"
+
 export const ActionTypes = {
   ADD_TODO_ITEM: 'ADD_TODO_ITEM',
   UPDATE_TODO_ITEM: 'UPDATE_TODO_ITEM',
@@ -16,7 +18,7 @@ export const addTodoItemAction = todoItemText => dispatch => {
     type: ActionTypes.ADD_TODO_ITEM,
     payload: {
       id: uid++,
-      title: todoItemText,
+      title: escapeHTML(todoItemText),
       isCompleted: false
     }
   })
@@ -51,6 +53,9 @@ export const deleteTodoItemAction = id => dispatch => {
 export const editTodoItemAction = todoItem => dispatch => {
   dispatch({
     type: ActionTypes.EDIT_TODO_ITEM,
-    payload: todoItem
+    payload: {
+      ...todoItem,
+      title: escapeHTML(todoItem.title)
+    }
   })
 }

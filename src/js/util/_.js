@@ -26,5 +26,16 @@ export const isEmpty = param => {
   )
 }
 
-// 空函数
-export const noop = () => {}
+// 字符串转义
+export const escapeHTML = text => {
+  return text.replace(/[<>'"\/&]/g, match => {
+    switch(match) {
+      case '<': return '&lt;'
+      case '>': return '&gt;'
+      case "'": return '&#x27;'
+      case '"': return '&quot;'
+      case '/': return '&#x2F;'
+      case '&': return '&amp;'
+    }
+  })
+}
