@@ -1,6 +1,6 @@
 import App from './App'
-import { reducer } from './store'
-import { createStore, mount, context } from './util'
+import { createStore, reducer } from './store'
+import { mount, context } from './util'
 // 状态仓库
 const store = createStore(reducer)
 // 保存到上下文中

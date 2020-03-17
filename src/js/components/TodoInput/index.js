@@ -1,25 +1,18 @@
 import Component from "@/base/component"
-import { ActionTypes } from "@/store/action"
-import { context } from '@/util'
+import { connect } from "@/store/connect"
+import { addTodoItemAction } from "@/store"
 
-let uid = 1
+const mapDispatchToProps = {
+  addTodoItemAction
+}
 
-export default class TodoInput extends Component {
+@connect(null, mapDispatchToProps)
+class TodoInput extends Component {
   // 添加待办事项
   addTodoItem() {
     const field = this.el.querySelector('.input-todo')
     const title = field.value
-    const todoItem = {
-      id: uid++,
-      title,
-      isCompleted: false
-    }
-    context.store.dispatch({
-      type: ActionTypes.ADD_TODO_ITEM,
-      payload: todoItem
-    })
-    field.value = ''
-    field.focus()
+    this.props.addTodoItemAction(title)
   }
 
   // 点击按钮添加
@@ -52,3 +45,5 @@ export default class TodoInput extends Component {
   `)
   }
 }
+
+export default TodoInput
